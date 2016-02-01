@@ -1,0 +1,6 @@
+framework module Pods_YXMusic_____ {
+  umbrella header "Pods-YXMusic音乐播放器-umbrella.h"
+
+  export *
+  module * { export * }
+}
