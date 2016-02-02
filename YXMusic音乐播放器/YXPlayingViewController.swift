@@ -56,6 +56,16 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     /// 歌曲名字
     @IBOutlet weak private var musicNameLabel: UILabel!
     /**
+     点击进度条执行
+       let x_change = (self.view.width - slider.width) * CGFloat(mPlayer.currentTime / mPlayer.duration)
+     */
+    @IBAction func onTap(sender: UITapGestureRecognizer) {
+        let point = sender.locationInView(sender.view)
+    self.player!.currentTime = Double(point.x / (self.view.width - slider.width)) * self.player!.duration
+        
+        
+    }
+    /**
      点击歌词按钮执行
      */
     @IBAction private func lrc() {
@@ -153,7 +163,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     }
     //创建定时器
     override func viewWillAppear(animated: Bool) {
-        let timer = NSTimer(timeInterval: 0.5, target: self, selector: "updateProhress", userInfo: nil, repeats: true)
+        let timer = NSTimer(timeInterval: 0.3, target: self, selector: "updateProhress", userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(timer, forMode:  NSRunLoopCommonModes)
     }
     /**
@@ -172,6 +182,8 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
    
      */
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
+        print("11")
         playButton.selected = !playButton.selected
+     
     }
 }
