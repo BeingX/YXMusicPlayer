@@ -9,10 +9,11 @@
 import UIKit
 import MJExtension
 import AVFoundation
-class YXPlayingViewController: UIViewController {
+class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     //当前的音乐播放器
     private var player :AVAudioPlayer?{
         didSet{
+            player!.delegate = self
             //设置各个空间的属性
             // 歌曲图片
             icon_music.image = UIImage(named:playingMusic!.icon!)
@@ -40,6 +41,8 @@ class YXPlayingViewController: UIViewController {
          
                     }
     }
+    //播放按钮
+    @IBOutlet weak private var playButton: UIButton!
     /// 滑块
    @IBOutlet weak private  var slider: UIButton!
     /// 歌曲总时间
@@ -148,7 +151,27 @@ class YXPlayingViewController: UIViewController {
       
         return timeStr
     }
-//    override func viewWillAppear(animated: Bool) {
-//        let timer = NSTimer(timeInterval: 0.5, target: self, selector: "", userInfo: nil, repeats: true)
-//    }
+    //创建定时器
+    override func viewWillAppear(animated: Bool) {
+        let timer = NSTimer(timeInterval: 0.5, target: self, selector: "updateProhress", userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(timer, forMode:  NSRunLoopCommonModes)
+    }
+    /**
+     更新滑块的位置
+     */
+    @objc private func updateProhress(){
+        if let mPlayer = self.player{
+            let x_change = (self.view.width - slider.width) * CGFloat(mPlayer.currentTime / mPlayer.duration)
+            slider.x = x_change
+            progressShowBar.width = slider.centerX
+        }
+        
+    }
+    /**
+     AVAudioPlayerDelegate 代理方法
+   
+     */
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
+        playButton.selected = !playButton.selected
+    }
 }

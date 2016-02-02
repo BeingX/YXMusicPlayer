@@ -10,6 +10,7 @@
                 <outlet property="icon_music" destination="3Lc-WG-2l7" id="fCs-B1-vGi"/>
                 <outlet property="musicNameLabel" destination="Byn-RK-IwF" id="HF4-my-nXv"/>
                 <outlet property="musicTotalTimeLabel" destination="igF-Yt-Pce" id="ien-jr-8Dy"/>
+                <outlet property="playButton" destination="MwA-mI-Suu" id="t0h-Vj-jum"/>
                 <outlet property="progressShowBar" destination="eTm-Ca-vii" id="waR-T8-Jhi"/>
                 <outlet property="singernameLabel" destination="ex6-XD-nNo" id="HFu-28-Ycl"/>
                 <outlet property="slider" destination="NP9-OX-f5L" id="fs7-dF-Rfa"/>
@@ -35,7 +36,7 @@
                             </connections>
                         </button>
                         <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1PH-0M-jrg" userLabel="歌曲名作者名">
-                            <rect key="frame" x="0.0" y="410" width="600" height="40"/>
+                            <rect key="frame" x="0.0" y="400" width="600" height="40"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Byn-RK-IwF" userLabel="歌曲名字">
                                     <rect key="frame" x="10" y="0.0" width="590" height="20"/>
@@ -92,7 +93,7 @@
                         <constraint firstItem="3Lc-WG-2l7" firstAttribute="leading" secondItem="2O0-Dx-uo3" secondAttribute="leading" id="SlT-ga-6Sl"/>
                         <constraint firstItem="aea-Bs-zHu" firstAttribute="leading" secondItem="2O0-Dx-uo3" secondAttribute="leading" constant="20" id="Uge-BP-OqX"/>
                         <constraint firstAttribute="trailing" secondItem="1PH-0M-jrg" secondAttribute="trailing" id="f33-u4-GjK"/>
-                        <constraint firstAttribute="bottom" secondItem="1PH-0M-jrg" secondAttribute="bottom" id="omX-HT-17p"/>
+                        <constraint firstAttribute="bottom" secondItem="1PH-0M-jrg" secondAttribute="bottom" constant="10" id="omX-HT-17p"/>
                         <constraint firstItem="3Lc-WG-2l7" firstAttribute="top" secondItem="2O0-Dx-uo3" secondAttribute="top" id="uOp-7r-Vzw"/>
                         <constraint firstAttribute="trailing" secondItem="3Lc-WG-2l7" secondAttribute="trailing" id="zX2-1J-m78"/>
                     </constraints>
@@ -162,7 +163,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NP9-OX-f5L" userLabel="滑块">
-                            <rect key="frame" x="0.0" y="-5" width="41" height="21"/>
+                            <rect key="frame" x="0.0" y="-6" width="41" height="21"/>
                             <state key="normal" backgroundImage="process_thumb"/>
                         </button>
                     </subviews>
