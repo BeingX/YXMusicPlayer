@@ -140,7 +140,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="600" height="10"/>
                             <subviews>
                                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eTm-Ca-vii" userLabel="进度条">
-                                    <rect key="frame" x="0.0" y="0.0" width="81" height="10"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="10"/>
                                     <color key="backgroundColor" red="0.26011821802502932" green="0.16540560458082876" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igF-Yt-Pce" userLabel="歌曲总时间">
