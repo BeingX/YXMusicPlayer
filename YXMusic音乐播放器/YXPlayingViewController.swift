@@ -10,20 +10,30 @@ import UIKit
 import MJExtension
 import AVFoundation
 class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
+    //当控制器的view用xib描述时，为了兼容ios8.0，必须重写这个方法
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: "YXPlayingViewController", bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     //当前的音乐播放器
     private var player :AVAudioPlayer?{
         didSet{
             
             player!.delegate = self
             //设置各个空间的属性
-            // 歌曲图片
-            icon_music.image = UIImage(named:playingMusic!.icon!)
+         
             // 歌曲名字
             musicNameLabel.text = playingMusic!.name
             // 作者名字
             singernameLabel.text = playingMusic!.singer
             //歌曲总时间
             musicTotalTimeLabel.text = timeIntervalToMinute(self.player!.duration)
+            // 歌曲图片
+       
+            icon_music.image = UIImage(named:self.playingMusic!.icon!)
         }
     }
   /// 记录正在播放的音乐
@@ -33,6 +43,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     
     var rowSelected:Int?{//属性观察器
         willSet{
+         
             if rowSelected != nil && newValue != rowSelected{
                 AudioTool.stopMusicWith(playingMusic!.filename!)
             }
@@ -152,7 +163,6 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
      显示播放音乐的详情
      */
      func show(){
-        
         self.view.hidden = false
         //获取主窗口
         let window = UIApplication.sharedApplication().keyWindow!
