@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="YXPlayingViewController" customModule="YXMusic音乐播放器" customModuleProvider="target">
             <connections>
+                <outlet property="currentTimeWhenPan_Button" destination="Uj8-IP-2Gk" id="V5U-jQ-yMQ"/>
                 <outlet property="icon_music" destination="3Lc-WG-2l7" id="fCs-B1-vGi"/>
                 <outlet property="musicNameLabel" destination="Byn-RK-IwF" id="HF4-my-nXv"/>
                 <outlet property="musicTotalTimeLabel" destination="igF-Yt-Pce" id="ien-jr-8Dy"/>
@@ -28,6 +29,7 @@
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play_cover_pic_bg" translatesAutoresizingMaskIntoConstraints="NO" id="3Lc-WG-2l7" userLabel="Music大图">
                             <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
+                            <gestureRecognizers/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KYr-43-P2a" userLabel="歌词按钮">
                             <rect key="frame" x="539" y="20" width="41" height="48"/>
@@ -81,6 +83,13 @@
                             <connections>
                                 <action selector="back" destination="-1" eventType="touchUpInside" id="4I3-JI-Jzy"/>
                             </connections>
+                        </button>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uj8-IP-2Gk" userLabel="拖拽时显示时间">
+                            <rect key="frame" x="0.0" y="210" width="60" height="30"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <state key="normal">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </state>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -173,6 +182,9 @@
                             <state key="normal" backgroundImage="process_thumb">
                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="Whl-Fv-RMb" appends="YES" id="UNC-D1-794"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -198,13 +210,19 @@
                 <constraint firstAttribute="trailing" secondItem="zG4-0U-CAR" secondAttribute="trailing" id="mnL-tv-Kx1"/>
                 <constraint firstItem="zG4-0U-CAR" firstAttribute="leading" secondItem="GlY-12-pFN" secondAttribute="leading" id="zUp-eI-J9Y"/>
             </constraints>
-            <point key="canvasLocation" x="592" y="320"/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <point key="canvasLocation" x="393" y="299"/>
         </view>
         <tapGestureRecognizer id="8KU-qq-BJ2">
             <connections>
                 <action selector="onTap:" destination="-1" id="zpG-7b-Yqk"/>
             </connections>
         </tapGestureRecognizer>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="Whl-Fv-RMb">
+            <connections>
+                <action selector="onPan:" destination="-1" id="vhb-Kb-s3T"/>
+            </connections>
+        </panGestureRecognizer>
     </objects>
     <resources>
         <image name="lyric_normal" width="41" height="48"/>

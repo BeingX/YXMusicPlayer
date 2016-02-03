@@ -18,13 +18,13 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    private var progressTimer :NSTimer?
     //当前的音乐播放器
     private var player :AVAudioPlayer?{
         didSet{
-            
             player!.delegate = self
             //设置各个空间的属性
-         
             // 歌曲名字
             musicNameLabel.text = playingMusic!.name
             // 作者名字
@@ -36,6 +36,8 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
             icon_music.image = UIImage(named:self.playingMusic!.icon!)
         }
     }
+    //拖拽时显示时间的label
+    @IBOutlet weak var currentTimeWhenPan_Button: UIButton!
   /// 记录正在播放的音乐
     private  var playingMusic:MusicModal?
     //模型数组
@@ -54,7 +56,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
                     }
     }
     /// 下部分
-    @IBOutlet weak var part_down: UIView!
+    @IBOutlet weak  private var part_down: UIView!
     //播放按钮
     @IBOutlet weak private var playButton: UIButton!
     /// 滑块
@@ -69,15 +71,74 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     @IBOutlet weak private var singernameLabel: UILabel!
     /// 歌曲名字
     @IBOutlet weak private var musicNameLabel: UILabel!
+    override func viewDidLoad() {
+        self.currentTimeWhenPan_Button.layer.cornerRadius = 10
+        
+        //支持屏幕旋转,监听屏幕旋转通知
+        UIDevice.currentDevice().generatesDeviceOrientationNotifications
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleDeviceOrientationDidChange:", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        
+    }
     /**
      点击进度条执行
        let x_change = (self.view.width - slider.width) * CGFloat(mPlayer.currentTime / mPlayer.duration)
      */
     @IBAction func onTap(sender: UITapGestureRecognizer) {
         let point = sender.locationInView(sender.view)
-    self.player!.currentTime = Double(point.x / (self.view.width - slider.width)) * self.player!.duration
+        //重置滑块位置
+        self.slider.x = point.x
+        //判断是否guo界
+        let sliderMaxX = self.view.width - slider.width
+       if slider.x > sliderMaxX {
+            slider.x = sliderMaxX
+        }
+        //调整进度条
+        self.progressShowBar.width = slider.centerX
+        self.player!.currentTime = Double(point.x / (self.view.width - slider.width)) * self.player!.duration
+        slider.setTitle(timeIntervalToMinute(self.player!.currentTime), forState: .Normal)
+    }
+    /**
+     拖拽滑块执行
+     */
+    @IBAction func onPan(sender: UIPanGestureRecognizer) {
+        //获得拖拽距离
+    let point = sender.translationInView(sender.view!)
+        sender.setTranslation(CGPointZero, inView: sender.view!)
+        //重置滑块位置
+        self.slider.x += point.x
         
+        //判断是否guo界
+        let sliderMaxX = self.view.width - slider.width
+        if slider.x < 0{
+            slider.x = 0
+        }else if slider.x > sliderMaxX {
+            slider.x = sliderMaxX
+        }
+        //调整进度条
+        self.progressShowBar.width = slider.centerX
         
+        //调到指定时间播放
+        self.player!.currentTime = Double(slider.x / (self.view.width - slider.width)) * self.player!.duration
+        slider.setTitle(timeIntervalToMinute(self.player!.currentTime), forState: .Normal)
+        //设置拖拽时显示的时间button
+        self.currentTimeWhenPan_Button.x = slider.x
+         currentTimeWhenPan_Button.setTitle(timeIntervalToMinute(self.player!.currentTime), forState: .Normal)
+          self.currentTimeWhenPan_Button.y = currentTimeWhenPan_Button.superview!.height - currentTimeWhenPan_Button.width - 15
+        // 如果是开始拖拽就停止定时器, 如果结束拖拽就开启定时器
+        if sender.state == .Began{
+            self.currentTimeWhenPan_Button.hidden = false
+            self.removeProgressTimer()
+            AudioTool.pauseMusicWith(playingMusic!.filename!)
+       
+        }else if sender.state == .Ended{
+            self.currentTimeWhenPan_Button.hidden = true
+            self.addProgressTimer()
+            //如果暂停播放按钮是播放状态，就开始播放
+            if self.playButton.selected == false{
+            AudioTool.playMusicWith(playingMusic!.filename!)
+            }
+           
+        }
     }
     /**
      点击歌词按钮执行
@@ -120,6 +181,10 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
      点击上一首按钮执行
      */
     @IBAction private func previous() {
+        
+        slider.x = 0
+        progressShowBar.width = 0
+        slider.setTitle("0:0", forState: .Normal)
         if rowSelected == 0{
             rowSelected! = musics.count - 1
         }else{
@@ -138,6 +203,10 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
      点击下一首按钮执行
      */
     @IBAction private func next() {
+        //重置进度条
+        slider.x = 0
+        progressShowBar.width = 0
+        slider.setTitle("0:0", forState: .Normal)
         if rowSelected == musics.count - 1{
             rowSelected! = 0
         }else{
@@ -152,13 +221,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
         }
       
     }
-    override func viewDidLoad() {
-       
-        //支持屏幕旋转,监听屏幕旋转通知
-        UIDevice.currentDevice().generatesDeviceOrientationNotifications
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleDeviceOrientationDidChange:", name: UIDeviceOrientationDidChangeNotification, object: nil)
-        
-    }
+
     /**
      显示播放音乐的详情
      */
@@ -193,16 +256,21 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
       
         return timeStr
     }
-    //创建定时器
+    
     override func viewDidAppear(animated: Bool) {
-        let timer = NSTimer(timeInterval: 0.3, target: self, selector: "updateProhress", userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(timer, forMode:  NSRunLoopCommonModes)
+           addProgressTimer()
+      
     }
     /**
      更新滑块的位置
      */
     @objc private func updateProhress(){
+     
         if let mPlayer = self.player{
+            
+            if !mPlayer.playing{//如果没有播放音乐
+                return
+            }
             let x_change = (self.view.width - slider.width) * CGFloat(mPlayer.currentTime / mPlayer.duration)
             slider.frame.origin.x = x_change
             progressShowBar.width = slider.centerX
@@ -223,6 +291,23 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     @objc func handleDeviceOrientationDidChange(not:NSNotification){
        
         self.view.frame = self.view.window!.bounds
+    }
+    /**
+     添加定时器
+     */
+    private func addProgressTimer(){
+        if self.progressTimer == nil{
+            self.progressTimer = NSTimer(timeInterval: 0.3, target: self, selector: "updateProhress", userInfo: nil, repeats: true)
+            NSRunLoop.mainRunLoop().addTimer(progressTimer!, forMode:  NSRunLoopCommonModes)
+        }
+      
+    }
+    /**
+     移除定时器
+     */
+    private func removeProgressTimer(){
+        self.progressTimer!.invalidate()
+        self.progressTimer = nil
     }
     
 
