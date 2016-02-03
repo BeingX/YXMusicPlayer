@@ -46,14 +46,7 @@ class AudioTool: NSObject {
      
     */
     class func playMusicWith(filename:String)->AVAudioPlayer?{
-        //进入后台也能播放
-        let session = AVAudioSession.sharedInstance()
-        do{
-            try  session.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try session.setActive(true)
-        }catch{
-            
-        }
+    
     
         var player = self.players[filename]
         if player == nil{

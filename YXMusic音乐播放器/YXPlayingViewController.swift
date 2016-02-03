@@ -114,8 +114,14 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
         }else{
              rowSelected = rowSelected! - 1
         }
-     
-      self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
+        
+        if  playButton.selected == false{//如果当前的按钮状态是正在播放
+            self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
+        }else{//如果当前的按钮状态是暂停状态
+          self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
+             AudioTool.pauseMusicWith(playingMusic!.filename!)
+        }
+    
     }
     /**
      点击下一首按钮执行
@@ -127,10 +133,17 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
             rowSelected = rowSelected! + 1
         }
         
-        self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
+        if  playButton.selected == false{//如果当前的按钮状态是正在播放
+            self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
+        }else{//如果当前的按钮状态是暂停状态
+            self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
+            AudioTool.pauseMusicWith(playingMusic!.filename!)
+        }
+      
     }
     override func viewDidLoad() {
-        //支持屏幕旋转
+       
+        //支持屏幕旋转,监听屏幕旋转通知
         UIDevice.currentDevice().generatesDeviceOrientationNotifications
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleDeviceOrientationDidChange:", name: UIDeviceOrientationDidChangeNotification, object: nil)
         
@@ -185,16 +198,14 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
             progressShowBar.width = slider.centerX
             slider.setTitle(timeIntervalToMinute(mPlayer.currentTime), forState: .Normal)
         }
-        
+    
     }
     /**
      AVAudioPlayerDelegate 代理方法
    
      */
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
-        
         playButton.selected = !playButton.selected
-     
     }
     /**
      屏幕旋转调用
@@ -203,5 +214,6 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
        
         self.view.frame = self.view.window!.bounds
     }
+    
 
 }
