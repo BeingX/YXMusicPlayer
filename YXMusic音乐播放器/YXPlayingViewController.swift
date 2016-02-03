@@ -13,6 +13,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     //当前的音乐播放器
     private var player :AVAudioPlayer?{
         didSet{
+            
             player!.delegate = self
             //设置各个空间的属性
             // 歌曲图片
@@ -126,6 +127,10 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
         
         self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
     }
+    override func viewDidLoad() {
+        UIDevice.currentDevice().generatesDeviceOrientationNotifications
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleDeviceOrientationDidChange:", name: UIDeviceOrientationDidChangeNotification, object: nil)
+    }
     /**
      显示播放音乐的详情
      */
@@ -162,7 +167,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
         return timeStr
     }
     //创建定时器
-    override func viewWillAppear(animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         let timer = NSTimer(timeInterval: 0.3, target: self, selector: "updateProhress", userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(timer, forMode:  NSRunLoopCommonModes)
     }
@@ -174,6 +179,9 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
             let x_change = (self.view.width - slider.width) * CGFloat(mPlayer.currentTime / mPlayer.duration)
             slider.x = x_change
             progressShowBar.width = slider.centerX
+           
+//            slider.setTitle(timeIntervalToMinute(mPlayer.currentTime), forState: .Normal)
+            
         }
         
     }
@@ -182,8 +190,16 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
    
      */
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
-        print("11")
+        
         playButton.selected = !playButton.selected
      
     }
+    /**
+     屏幕旋转调用
+     */
+    @objc func handleDeviceOrientationDidChange(not:NSNotification){
+       
+        self.view.frame = self.view.window!.bounds
+    }
+
 }
