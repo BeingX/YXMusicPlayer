@@ -42,6 +42,8 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
          
                     }
     }
+    /// 下部分
+    @IBOutlet weak var part_down: UIView!
     //播放按钮
     @IBOutlet weak private var playButton: UIButton!
     /// 滑块
@@ -128,8 +130,10 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
         self.player =   AudioTool.playMusicWith(self.playingMusic!.filename!)
     }
     override func viewDidLoad() {
+        //支持屏幕旋转
         UIDevice.currentDevice().generatesDeviceOrientationNotifications
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleDeviceOrientationDidChange:", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        
     }
     /**
      显示播放音乐的详情
@@ -177,11 +181,9 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     @objc private func updateProhress(){
         if let mPlayer = self.player{
             let x_change = (self.view.width - slider.width) * CGFloat(mPlayer.currentTime / mPlayer.duration)
-            slider.x = x_change
+            slider.frame.origin.x = x_change
             progressShowBar.width = slider.centerX
-           
-//            slider.setTitle(timeIntervalToMinute(mPlayer.currentTime), forState: .Normal)
-            
+            slider.setTitle(timeIntervalToMinute(mPlayer.currentTime), forState: .Normal)
         }
         
     }
