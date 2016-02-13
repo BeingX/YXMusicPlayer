@@ -258,6 +258,7 @@ class YXPlayingViewController: UIViewController,AVAudioPlayerDelegate {
     }
     
     override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
            addProgressTimer()
       
     }
